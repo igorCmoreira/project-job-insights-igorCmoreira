@@ -1,3 +1,4 @@
+from fileinput import close
 from multiprocessing.sharedctypes import Value
 from .jobs import read
 
@@ -72,21 +73,12 @@ def matches_salary_range(job, salary):
     return int(min_salary) <= salary <= int(max_salary)
 
 
-
-
 def filter_by_salary_range(jobs, salary):
-    """Filters a list of jobs by salary range
-
-    Parameters
-    ----------
-    jobs : list
-        The jobs to be filtered
-    salary : int
-        The salary to be used as filter
-
-    Returns
-    -------
-    list
-        Jobs whose salary range contains `salary`
-    """
-    return []
+    job_filter_salary = []
+    for job in jobs:
+        try:
+            if matches_salary_range(job, salary):
+                job_filter_salary.append(job)
+        except ValueError:
+            close
+    return job_filter_salary
